@@ -85,7 +85,7 @@ fun NotesScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Your Note",
+                    text = "NoteFlow",
                     style = MaterialTheme.typography.headlineLarge
                 )
                 IconButton(
