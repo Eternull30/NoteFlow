@@ -119,14 +119,13 @@ fun NotesScreen(
                 items(state.notes) { note ->
                     NoteItem(
                         note = note,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable {
-                                navController.navigate(
-                                    Screen.AddEditNoteScreen.route +
-                                            "?noteid=${note.id}&noteColor=${note.color}"
-                                )
-                            },
+                        modifier = Modifier.fillMaxWidth(),
+                        onClick = {
+                            navController.navigate(
+                                Screen.AddEditNoteScreen.route +
+                                        "?noteId=${note.id}&noteColor=${note.color}"
+                            )
+                        },
                         onDeleteClick = {
                             viewModel.onEvent(NotesEvent.DeleteNote(note))
 

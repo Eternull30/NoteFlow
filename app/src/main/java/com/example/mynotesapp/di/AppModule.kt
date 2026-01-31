@@ -1,4 +1,4 @@
-package com.example.mynotesapp.di
+    package com.example.mynotesapp.di
 
 import android.app.Application
 import androidx.compose.ui.unit.Density

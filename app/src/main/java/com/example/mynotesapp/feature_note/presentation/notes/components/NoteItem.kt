@@ -2,6 +2,7 @@ package com.example.mynotesapp.feature_note.presentation.notes.components
 
 import ads_mobile_sdk.h6
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -34,14 +35,16 @@ import com.example.mynotesapp.feature_note.domain.model.Note
 fun NoteItem(
     note: Note,
     modifier: Modifier = Modifier,
-    onDeleteClick :() -> Unit
+    onDeleteClick :() -> Unit,
+    onClick:() -> Unit
 ){
 
-        Box(Modifier.fillMaxSize()) {
+        Box(modifier = Modifier) {
             Box(
                 Modifier
                     .fillMaxWidth()
-                    .height(150.dp)
+                    .height(130.dp)
+                    .clickable{onClick()}
                     .dropShadow(
                         shape = RoundedCornerShape(20.dp),
                         shadow = Shadow(
@@ -53,7 +56,7 @@ fun NoteItem(
                     )
                     .align(Alignment.Center)
                     .background(
-                        color = Color.White,
+                        color = Color(note.color),
                         shape = RoundedCornerShape(20.dp)
                     )
             )
@@ -70,7 +73,7 @@ fun NoteItem(
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
-                Spacer( modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = note.content,
                     style = MaterialTheme.typography.bodyLarge,
@@ -80,12 +83,12 @@ fun NoteItem(
                 )
             }
             IconButton(
-                onClick =onDeleteClick,
-                modifier = Modifier.align (Alignment.BottomEnd)
+                onClick = onDeleteClick,
+                modifier = Modifier.align(Alignment.BottomEnd)
             ) {
                 Icon(
-                    imageVector = Icons.Default.Delete ,
-                    contentDescription ="" ,
+                    imageVector = Icons.Default.Delete,
+                    contentDescription = "",
                 )
             }
         }
