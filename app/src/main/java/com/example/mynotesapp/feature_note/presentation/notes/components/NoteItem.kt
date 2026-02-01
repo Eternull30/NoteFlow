@@ -50,13 +50,13 @@ fun NoteItem(
                         shadow = Shadow(
                             radius = 10.dp,
                             spread = 6.dp,
-                            color = Color(0x40000000),
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f),
                             offset = DpOffset(x = 4.dp, 4.dp)
                         )
                     )
                     .align(Alignment.Center)
                     .background(
-                        color = Color(note.color),
+                        color = MaterialTheme.colorScheme.surface,
                         shape = RoundedCornerShape(20.dp)
                     )
             )
@@ -89,6 +89,7 @@ fun NoteItem(
                 Icon(
                     imageVector = Icons.Default.Delete,
                     contentDescription = "",
+                    tint = MaterialTheme.colorScheme.error
                 )
             }
         }
