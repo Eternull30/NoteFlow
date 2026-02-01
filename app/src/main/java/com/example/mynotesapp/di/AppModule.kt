@@ -28,7 +28,9 @@ object AppModule {
             app,
             NoteDataBase::class.java,
             NoteDataBase.DATABASE_NAME
-        ).build()
+        )
+            .fallbackToDestructiveMigration()
+            .build()
     }
 
     @Provides

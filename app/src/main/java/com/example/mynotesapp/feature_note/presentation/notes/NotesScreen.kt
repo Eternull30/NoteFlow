@@ -123,7 +123,7 @@ fun NotesScreen(
                         onClick = {
                             navController.navigate(
                                 Screen.AddEditNoteScreen.route +
-                                        "?noteId=${note.id}&noteColor=${note.color}"
+                                        "?noteId=${note.id}"
                             )
                         },
                         onDeleteClick = {

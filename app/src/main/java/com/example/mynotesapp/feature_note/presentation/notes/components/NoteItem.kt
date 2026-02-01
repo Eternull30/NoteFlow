@@ -22,7 +22,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.dropShadow
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.graphics.shadow.Shadow
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.DpOffset
@@ -35,62 +38,59 @@ import com.example.mynotesapp.feature_note.domain.model.Note
 fun NoteItem(
     note: Note,
     modifier: Modifier = Modifier,
-    onDeleteClick :() -> Unit,
-    onClick:() -> Unit
-){
+    onClick: () -> Unit,
+    onDeleteClick: () -> Unit
+) {
+    val isDark = MaterialTheme.colorScheme.background.luminance() < 0.5f
 
-        Box(modifier = Modifier) {
-            Box(
-                Modifier
-                    .fillMaxWidth()
-                    .height(130.dp)
-                    .clickable{onClick()}
-                    .dropShadow(
-                        shape = RoundedCornerShape(20.dp),
-                        shadow = Shadow(
-                            radius = 10.dp,
-                            spread = 6.dp,
-                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f),
-                            offset = DpOffset(x = 4.dp, 4.dp)
-                        )
-                    )
-                    .align(Alignment.Center)
-                    .background(
-                        color = MaterialTheme.colorScheme.surface,
-                        shape = RoundedCornerShape(20.dp)
-                    )
+    val gradient = if (isDark) {
+        Brush.verticalGradient(
+            listOf(Color(0xFF2A2A2A), Color(0xFF1F1F1F))
+        )
+    } else {
+        Brush.verticalGradient(
+            listOf(Color.White, Color(0xFFF3F3F3))
+        )
+    }
+
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(150.dp)
+            .shadow(
+                elevation = 10.dp,
+                shape = RoundedCornerShape(20.dp),
+                ambientColor = Color.Black.copy(alpha = 0.15f),
+                spotColor = Color.Black.copy(alpha = 0.2f)
             )
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp)
-                    .padding(end = 32.dp)
-            ) {
-                Text(
-                    text = note.title,
-                    style = MaterialTheme.typography.headlineSmall,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = note.content,
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    maxLines = 4,
-                    overflow = TextOverflow.Ellipsis
-                )
-            }
-            IconButton(
-                onClick = onDeleteClick,
-                modifier = Modifier.align(Alignment.BottomEnd)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Delete,
-                    contentDescription = "",
-                    tint = MaterialTheme.colorScheme.error
-                )
-            }
+            .background(gradient, RoundedCornerShape(20.dp))
+            .clickable { onClick() }
+            .padding(16.dp)
+    ) {
+        Column {
+            Text(
+                note.title,
+                style = MaterialTheme.typography.headlineSmall,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+            Spacer(Modifier.height(8.dp))
+            Text(
+                note.content,
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f),
+                maxLines = 4
+            )
+        }
+
+        IconButton(
+            onClick = onDeleteClick,
+            modifier = Modifier.align(Alignment.BottomEnd)
+        ) {
+            Icon(
+                Icons.Default.Delete,
+                contentDescription = "Delete",
+                tint = MaterialTheme.colorScheme.error.copy(alpha = 0.8f)
+            )
         }
     }
+}
