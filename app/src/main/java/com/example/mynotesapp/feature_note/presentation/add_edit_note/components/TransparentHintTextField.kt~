@@ -43,8 +43,7 @@ fun TransparentHintTextField(
                 }
         )
         if(isHintVisible) {
-            Text(text = hint, style = textStyle,
-                color = if (isSystemInDarkTheme())Color.White else Color.Black)
+            Text(text = hint, style = textStyle, color = if (isSystemInDarkTheme()))
         }
     }
 }

@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Save
@@ -20,6 +21,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
@@ -93,6 +96,9 @@ fun AddEditNoteScreen(
                 textStyle = MaterialTheme.typography.headlineLarge.copy(
                     color = MaterialTheme.colorScheme.onSurface
                 ),
+                cursorBrush = SolidColor(
+                    if(isSystemInDarkTheme()) Color.White else Color.Black
+                ),
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -122,6 +128,9 @@ fun AddEditNoteScreen(
                     isHintVisible = contentState.isHintVisible,
                     textStyle = MaterialTheme.typography.headlineMedium.copy(
                         color = MaterialTheme.colorScheme.onSurface
+                    ),
+                    cursorBrush = SolidColor(
+                        if(isSystemInDarkTheme()) Color.White else Color.Black
                     ),
                     modifier = Modifier
                         .fillMaxHeight()
