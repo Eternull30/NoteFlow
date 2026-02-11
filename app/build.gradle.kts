@@ -58,12 +58,10 @@ android {
 
 dependencies {
     implementation(libs.androidx.compose.foundation)
-    implementation(platform("com.google.firebase:firebase-bom:34.8.0"))
-    implementation("com.google.firebase:firebase-auth")
-    implementation("com.google.firebase:firebase-analytics")
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.auth)
+    implementation(libs.firebase.analytics)
     implementation(libs.ads.mobile.sdk)
-    implementation(libs.firebase.auth.ktx)
-    // Compose BOM (manages all Compose versions automatically)
     val composeBom = platform(libs.androidx.compose.bom)
     implementation(composeBom)
     androidTestImplementation(composeBom)
@@ -90,6 +88,8 @@ dependencies {
     // Coroutines
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.kotlinx.coroutines.play.services)
+
 
     // Hilt (using KSP instead of kapt for better performance)
     implementation(libs.hilt.android)

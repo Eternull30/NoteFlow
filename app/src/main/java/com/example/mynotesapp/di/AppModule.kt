@@ -11,6 +11,7 @@ import com.example.mynotesapp.feature_note.domain.use_case.DeleteNote
 import com.example.mynotesapp.feature_note.domain.use_case.GetNote
 import com.example.mynotesapp.feature_note.domain.use_case.GetNotes
 import com.example.mynotesapp.feature_note.domain.use_case.NoteUseCases
+import com.google.firebase.auth.FirebaseAuth
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -48,6 +49,16 @@ object AppModule {
             addNote = AddNote(repository),
             getNote = GetNote(repository)
         )
+    }
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
+object FirebaseModule{
+    @Provides
+    @Singleton
+    fun provideFirebaseAuth(): FirebaseAuth {
+        return FirebaseAuth.getInstance()
     }
 }
 

@@ -18,6 +18,7 @@ import com.example.mynotesapp.ui.theme.MyNotesAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 import com.google.firebase.auth.FirebaseAuth
 import android.util.Log
+import com.example.mynotesapp.feature_note.login.LoginScreen
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -32,32 +33,43 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     color = MaterialTheme.colorScheme.background
                 ) {
+                    val auth = FirebaseAuth.getInstance()
+                    val startDestination = if (auth.currentUser == null) {
+                        "login"
+                    } else {
+                        Screen.NotesScreen.route
+                    }
+
                     val navController = rememberNavController()
+
                     NavHost(
                         navController = navController,
-                        startDestination = Screen.NotesScreen.route
+                        startDestination = startDestination
                     ) {
+
+                        composable("login") {
+                            LoginScreen(navController = navController)
+                        }
+
                         composable(route = Screen.NotesScreen.route) {
                             NotesScreen(navController = navController)
                         }
+
                         composable(
-                            route = Screen.AddEditNoteScreen.route +
-                                    "?noteId={noteId}",
+                            route = Screen.AddEditNoteScreen.route + "?noteId={noteId}",
                             arguments = listOf(
                                 navArgument(
                                     name = "noteId"
                                 ) {
                                     type = NavType.IntType
                                     defaultValue = -1
-                                },
-
+                                }
                             )
                         ) {
-                            AddEditNoteScreen(
-                                navController = navController
-                            )
+                            AddEditNoteScreen(navController = navController)
                         }
                     }
+
                 }
             }
         }
