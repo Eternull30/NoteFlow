@@ -59,8 +59,10 @@ android {
 dependencies {
     implementation(libs.androidx.compose.foundation)
     implementation(platform("com.google.firebase:firebase-bom:34.8.0"))
+    implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-analytics")
     implementation(libs.ads.mobile.sdk)
+    implementation(libs.firebase.auth.ktx)
     // Compose BOM (manages all Compose versions automatically)
     val composeBom = platform(libs.androidx.compose.bom)
     implementation(composeBom)

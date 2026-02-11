@@ -16,12 +16,17 @@ import com.example.mynotesapp.feature_note.presentation.notes.NotesScreen
 import com.example.mynotesapp.feature_note.presentation.util.Screen
 import com.example.mynotesapp.ui.theme.MyNotesAppTheme
 import dagger.hilt.android.AndroidEntryPoint
+import com.google.firebase.auth.FirebaseAuth
+import android.util.Log
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     @ExperimentalAnimationApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val auth = FirebaseAuth.getInstance()
+        Log.d("FIREBASE_TEST", "Firebase connected: ${auth != null}")
+
         setContent {
             MyNotesAppTheme() {
                 Surface(
