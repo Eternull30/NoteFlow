@@ -44,15 +44,15 @@ class MainActivity : ComponentActivity() {
 
                     NavHost(
                         navController = navController,
-                        startDestination = startDestination
+                        startDestination = "home"
                     ) {
 
                         composable("login") {
                             LoginScreen(navController = navController)
                         }
 
-                        composable(route = Screen.NotesScreen.route) {
-                            NotesScreen(navController = navController)
+                        composable("home") {
+                            HomeScreen(navController = navController)
                         }
 
                         composable(
