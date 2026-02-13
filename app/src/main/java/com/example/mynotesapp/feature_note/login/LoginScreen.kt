@@ -63,7 +63,7 @@ fun LoginScreen(
                         .addOnSuccessListener {
                             Toast.makeText(context, "Login Successful", Toast.LENGTH_SHORT).show()
 
-                            navController.navigate(Screen.NotesScreen.route) {
+                            navController.navigate("home") {
                                 popUpTo("login") { inclusive = true }
                             }
                         }

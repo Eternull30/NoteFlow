@@ -18,6 +18,7 @@ import com.example.mynotesapp.ui.theme.MyNotesAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 import com.google.firebase.auth.FirebaseAuth
 import android.util.Log
+import com.example.mynotesapp.feature_note.home_screen.HomeScreen
 import com.example.mynotesapp.feature_note.login.LoginScreen
 
 @AndroidEntryPoint
