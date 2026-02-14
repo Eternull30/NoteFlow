@@ -10,7 +10,9 @@ data class Note(
     val title: String,
     val content: String,
     val timestamp :Long,
-    @PrimaryKey val id: Int? = null
+    val firestoreId: String? = null,
+    val id: Int? = null,
+
 )
 
 class InvalidNoteException(message: String): Exception(message)

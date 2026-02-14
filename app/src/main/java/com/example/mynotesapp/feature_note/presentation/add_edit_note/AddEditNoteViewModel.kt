@@ -87,26 +87,30 @@ class AddEditNoteViewModel @Inject constructor(
                 )
             }
             is AddEditNoteEvent.SaveNote -> {
-                viewModelScope.launch{
-                    try{
-                        noteUseCases.addNote(
-                            Note(
-                                title = noteTitle.value.text,
-                                content = noteContent.value.text,
-                                timestamp = System.currentTimeMillis(),
-                                id = currentNoteId
-                            )
+                viewModelScope.launch {
+                    try {
+
+                        val note = Note(
+                            title = noteTitle.value.text,
+                            content = noteContent.value.text,
+                            timestamp = System.currentTimeMillis(),
+                            id = currentNoteId ?: 0
                         )
+
+                        noteUseCases.addNote(note)
+
                         _eventFlow.emit(UiEvent.SaveNote)
-                    }catch(e: InvalidNoteException){
+
+                    } catch (e: InvalidNoteException) {
                         _eventFlow.emit(
                             UiEvent.ShowSnackbar(
-                                message= e.message ?: "Couldn't save note"
+                                message = e.message ?: "Couldn't save note"
                             )
                         )
                     }
                 }
             }
+
         }
     }
 

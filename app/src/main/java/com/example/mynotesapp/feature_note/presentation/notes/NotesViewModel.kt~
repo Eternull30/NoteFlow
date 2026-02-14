@@ -33,8 +33,7 @@ class NotesViewModel @Inject constructor(
     init{
         getNotes(NoteOrder.Date(OrderType.Descending))
         viewModelScope.launch {
-            noteUseCases.syncNotes()
-        }
+            noteUseCases.syncNotes() }
     }
 
     fun onEvent(event: NotesEvent) {

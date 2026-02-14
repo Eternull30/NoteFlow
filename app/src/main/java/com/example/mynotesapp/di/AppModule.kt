@@ -1,17 +1,14 @@
-    package com.example.mynotesapp.di
+package com.example.mynotesapp.di
 
 import android.app.Application
-import androidx.compose.ui.unit.Density
 import androidx.room.Room
 import com.example.mynotesapp.feature_note.data.data__source.NoteDataBase
+import com.example.mynotesapp.feature_note.data.remote.FirestoreDataSource
 import com.example.mynotesapp.feature_note.data.repository.NoteRepositoryImplementation
 import com.example.mynotesapp.feature_note.domain.repository.NoteRepository
-import com.example.mynotesapp.feature_note.domain.use_case.AddNote
-import com.example.mynotesapp.feature_note.domain.use_case.DeleteNote
-import com.example.mynotesapp.feature_note.domain.use_case.GetNote
-import com.example.mynotesapp.feature_note.domain.use_case.GetNotes
-import com.example.mynotesapp.feature_note.domain.use_case.NoteUseCases
+import com.example.mynotesapp.feature_note.domain.use_case.*
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -36,8 +33,14 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideNoteRepository(db: NoteDataBase): NoteRepository {
-        return NoteRepositoryImplementation(db.noteDao)
+    fun provideNoteRepository(
+        db: NoteDataBase,
+        firestoreDataSource: FirestoreDataSource
+    ): NoteRepository {
+        return NoteRepositoryImplementation(
+            db.noteDao,
+            firestoreDataSource
+        )
     }
 
     @Provides
@@ -47,18 +50,34 @@ object AppModule {
             getNotes = GetNotes(repository),
             deleteNote = DeleteNote(repository),
             addNote = AddNote(repository),
-            getNote = GetNote(repository)
+            getNote = GetNote(repository),
+            syncNotes = SyncNotes(repository)
         )
     }
 }
 
 @Module
 @InstallIn(SingletonComponent::class)
-object FirebaseModule{
+object FirebaseModule {
+
     @Provides
     @Singleton
     fun provideFirebaseAuth(): FirebaseAuth {
         return FirebaseAuth.getInstance()
     }
-}
 
+    @Provides
+    @Singleton
+    fun provideFirestore(): FirebaseFirestore {
+        return FirebaseFirestore.getInstance()
+    }
+
+    @Provides
+    @Singleton
+    fun provideFirestoreDataSource(
+        firestore: FirebaseFirestore,
+        auth: FirebaseAuth
+    ): FirestoreDataSource {
+        return FirestoreDataSource(firestore, auth)
+    }
+}

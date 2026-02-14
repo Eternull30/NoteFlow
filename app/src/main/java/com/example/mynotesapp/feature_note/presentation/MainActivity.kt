@@ -38,14 +38,14 @@ class MainActivity : ComponentActivity() {
                     val startDestination = if (auth.currentUser == null) {
                         "login"
                     } else {
-                        Screen.NotesScreen.route
+                        "home"
                     }
 
                     val navController = rememberNavController()
 
                     NavHost(
                         navController = navController,
-                        startDestination = "home"
+                        startDestination = startDestination
                     ) {
 
                         composable("login") {

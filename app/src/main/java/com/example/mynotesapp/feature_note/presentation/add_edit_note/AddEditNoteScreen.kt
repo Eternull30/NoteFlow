@@ -46,14 +46,14 @@ fun AddEditNoteScreen(
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
             when (event) {
+                is AddEditNoteViewModel.UiEvent.SaveNote -> {
+                    navController.popBackStack()
+                }
+
                 is AddEditNoteViewModel.UiEvent.ShowSnackbar -> {
                     snackbarHostState.showSnackbar(
                         message = event.message
                     )
-                }
-
-                is AddEditNoteViewModel.UiEvent.SaveNote -> {
-                    navController.navigateUp()
                 }
             }
         }

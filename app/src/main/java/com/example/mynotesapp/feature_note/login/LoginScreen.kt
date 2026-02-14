@@ -10,18 +10,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.mynotesapp.feature_note.presentation.notes.NotesViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.example.mynotesapp.feature_note.presentation.util.Screen
+import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(
-    navController: NavController
+    navController: NavController,
+    viewModel: NotesViewModel = hiltViewModel()
 ) {
 
     val context = LocalContext.current
     val auth = FirebaseAuth.getInstance()
-
+    val scope = rememberCoroutineScope()
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
@@ -61,6 +65,9 @@ fun LoginScreen(
                 if (email.isNotEmpty() && password.isNotEmpty()) {
                     auth.signInWithEmailAndPassword(email, password)
                         .addOnSuccessListener {
+                            scope.launch {
+                                viewModel.syncNotes()
+                            }
                             Toast.makeText(context, "Login Successful", Toast.LENGTH_SHORT).show()
 
                             navController.navigate("home") {

@@ -61,6 +61,7 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth)
     implementation(libs.firebase.analytics)
+    implementation(libs.firebase.firestore)
     implementation(libs.ads.mobile.sdk)
     val composeBom = platform(libs.androidx.compose.bom)
     implementation(composeBom)
