@@ -45,4 +45,12 @@ class FirestoreDataSource(
         return auth.currentUser?.uid ?: ""
     }
 
+    suspend fun addOrUpdateNote(note: FirestoreNote) {
+
+        firestore.collection("notes")
+            .document(note.id)
+            .set(note)
+            .await()
+    }
+
 }

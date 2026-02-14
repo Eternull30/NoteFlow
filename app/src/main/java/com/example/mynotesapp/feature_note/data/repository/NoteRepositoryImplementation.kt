@@ -21,22 +21,23 @@ class NoteRepositoryImplementation(
     }
 
     override suspend fun insertNote(note: Note) {
-        dao.insertNote(note)
 
-        val userId = firestoreDataSource.getCurrentUserId()
+        val userId = firestoreDataSource.getCurrentUserId() ?: return
 
-        println("DEBUG_FIRESTORE userId = $userId")
-
-        firestoreDataSource.addNote(
-            FirestoreNote(
-                id = note.id.toString(),
-                title = note.title,
-                content = note.content,
-                timestamp = note.timestamp,
-                userId = userId
-            )
+        val firestoreNote = FirestoreNote(
+            id = note.id.toString(),
+            title = note.title,
+            content = note.content,
+            timestamp = note.timestamp,
+            userId = userId
         )
+
+        firestoreDataSource.addOrUpdateNote(firestoreNote)
+
+        dao.insertNote(note)
     }
+
+
 
     override suspend fun deleteNote(note: Note) {
         dao.deleteNote(note)
@@ -47,21 +48,24 @@ class NoteRepositoryImplementation(
 
         val remoteNotes = firestoreDataSource.getNotes()
 
-        if (remoteNotes.isEmpty()) return
-
-        dao.deleteAllNotes()
-
         remoteNotes.forEach { firestoreNote ->
 
-            val note = Note(
-                title = firestoreNote.title,
-                content = firestoreNote.content,
-                timestamp = firestoreNote.timestamp
-            )
+            val localNote = dao.getNoteById(firestoreNote.id.toIntOrNull() ?: return@forEach)
 
-            dao.insertNote(note)
+            if (localNote == null) {
+
+                val note = Note(
+                    id = firestoreNote.id.toIntOrNull(),
+                    title = firestoreNote.title,
+                    content = firestoreNote.content,
+                    timestamp = firestoreNote.timestamp
+                )
+
+                dao.insertNote(note)
+            }
         }
     }
+
 
 }
 

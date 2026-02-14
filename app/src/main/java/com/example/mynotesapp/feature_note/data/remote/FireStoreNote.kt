@@ -4,6 +4,7 @@ data class FirestoreNote(
     val id: String = "",
     val title: String = "",
     val content: String = "",
-    val timestamp: Long = 0L,
+    val timestamp: Long = 0,
     val userId: String = ""
 )
+
