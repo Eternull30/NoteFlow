@@ -5,15 +5,17 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.example.mynotesapp.ui.theme.PurpleGrey40
 
-@Entity
+@Entity(tableName = "note")
 data class Note(
     val title: String,
     val content: String,
     val timestamp :Long,
-    val firestoreId: String? = null,
+    val userId : String = "",
+    val firestoreId: String?= null,
+    @PrimaryKey(autoGenerate = true)
     val id: Int? = null,
 
-)
+    )
 
 class InvalidNoteException(message: String): Exception(message)
 

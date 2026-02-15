@@ -1,11 +1,11 @@
 package com.example.mynotesapp.feature_note.data.repository
 
-import kotlinx.coroutines.flow.Flow
 import com.example.mynotesapp.feature_note.data.data__source.NoteDao
 import com.example.mynotesapp.feature_note.data.remote.FirestoreDataSource
 import com.example.mynotesapp.feature_note.data.remote.FirestoreNote
 import com.example.mynotesapp.feature_note.domain.model.Note
 import com.example.mynotesapp.feature_note.domain.repository.NoteRepository
+import kotlinx.coroutines.flow.Flow
 
 class NoteRepositoryImplementation(
     private val dao: NoteDao,
@@ -13,7 +13,8 @@ class NoteRepositoryImplementation(
 ) : NoteRepository {
 
     override fun getNotes(): Flow<List<Note>> {
-        return dao.getNotes()
+        val userId = firestoreDataSource.getCurrentUserId() ?: ""
+        return dao.getNotes(userId)
     }
 
     override suspend fun getNoteById(id: Int): Note? {
@@ -21,22 +22,22 @@ class NoteRepositoryImplementation(
     }
 
     override suspend fun insertNote(note: Note) {
-
         val userId = firestoreDataSource.getCurrentUserId() ?: return
 
+        val noteWithUser = note.copy(userId = userId)
+
+        val localId = dao.insertNote(noteWithUser)
+
         val firestoreNote = FirestoreNote(
-            id = note.id.toString(),
+            id = localId.toString(),
             title = note.title,
             content = note.content,
             timestamp = note.timestamp,
             userId = userId
         )
 
-        firestoreDataSource.addOrUpdateNote(firestoreNote)
-
-        dao.insertNote(note)
+        firestoreDataSource.upsertNote(firestoreNote)
     }
-
 
 
     override suspend fun deleteNote(note: Note) {
@@ -46,26 +47,28 @@ class NoteRepositoryImplementation(
 
     override suspend fun syncNotes() {
 
-        val remoteNotes = firestoreDataSource.getNotes()
+        // 🔐 HARD GUARD — NO USER, NO SYNC
+        val userId = firestoreDataSource.getCurrentUserId() ?: return
+
+        val remoteNotes = firestoreDataSource.getAllNotes()
 
         remoteNotes.forEach { firestoreNote ->
 
-            val localNote = dao.getNoteById(firestoreNote.id.toIntOrNull() ?: return@forEach)
+            val localId = firestoreNote.id.toIntOrNull() ?: return@forEach
+
+            val localNote = dao.getNoteById(localId)
 
             if (localNote == null) {
-
-                val note = Note(
-                    id = firestoreNote.id.toIntOrNull(),
-                    title = firestoreNote.title,
-                    content = firestoreNote.content,
-                    timestamp = firestoreNote.timestamp
+                dao.insertNote(
+                    Note(
+                        id = localId,
+                        title = firestoreNote.title,
+                        content = firestoreNote.content,
+                        timestamp = firestoreNote.timestamp,
+                        userId = userId
+                    )
                 )
-
-                dao.insertNote(note)
             }
         }
     }
-
-
 }
-

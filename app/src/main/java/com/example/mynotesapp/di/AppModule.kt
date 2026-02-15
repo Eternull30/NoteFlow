@@ -2,6 +2,7 @@ package com.example.mynotesapp.di
 
 import android.app.Application
 import androidx.room.Room
+import com.example.mynotesapp.feature_note.data.data__source.NoteDao
 import com.example.mynotesapp.feature_note.data.data__source.NoteDataBase
 import com.example.mynotesapp.feature_note.data.remote.FirestoreDataSource
 import com.example.mynotesapp.feature_note.data.repository.NoteRepositoryImplementation
@@ -19,6 +20,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object AppModule {
 
+    // 🔹 ROOM DATABASE
     @Provides
     @Singleton
     fun provideNoteDatabase(app: Application): NoteDataBase {
@@ -26,51 +28,25 @@ object AppModule {
             app,
             NoteDataBase::class.java,
             NoteDataBase.DATABASE_NAME
-        )
-            .fallbackToDestructiveMigration()
-            .build()
+        ).build()
     }
 
     @Provides
     @Singleton
-    fun provideNoteRepository(
-        db: NoteDataBase,
-        firestoreDataSource: FirestoreDataSource
-    ): NoteRepository {
-        return NoteRepositoryImplementation(
-            db.noteDao,
-            firestoreDataSource
-        )
+    fun provideNoteDao(db: NoteDataBase): NoteDao {
+        return db.noteDao
     }
+
+    // 🔹 FIREBASE
+    @Provides
+    @Singleton
+    fun provideFirestore(): FirebaseFirestore =
+        FirebaseFirestore.getInstance()
 
     @Provides
     @Singleton
-    fun provideNoteUseCase(repository: NoteRepository): NoteUseCases {
-        return NoteUseCases(
-            getNotes = GetNotes(repository),
-            deleteNote = DeleteNote(repository),
-            addNote = AddNote(repository),
-            getNote = GetNote(repository),
-            syncNotes = SyncNotes(repository)
-        )
-    }
-}
-
-@Module
-@InstallIn(SingletonComponent::class)
-object FirebaseModule {
-
-    @Provides
-    @Singleton
-    fun provideFirebaseAuth(): FirebaseAuth {
-        return FirebaseAuth.getInstance()
-    }
-
-    @Provides
-    @Singleton
-    fun provideFirestore(): FirebaseFirestore {
-        return FirebaseFirestore.getInstance()
-    }
+    fun provideFirebaseAuth(): FirebaseAuth =
+        FirebaseAuth.getInstance()
 
     @Provides
     @Singleton
@@ -79,5 +55,30 @@ object FirebaseModule {
         auth: FirebaseAuth
     ): FirestoreDataSource {
         return FirestoreDataSource(firestore, auth)
+    }
+
+    // 🔹 REPOSITORY
+    @Provides
+    @Singleton
+    fun provideNoteRepository(
+        dao: NoteDao,
+        firestoreDataSource: FirestoreDataSource
+    ): NoteRepository {
+        return NoteRepositoryImplementation(dao, firestoreDataSource)
+    }
+
+    // 🔹 USE CASES
+    @Provides
+    @Singleton
+    fun provideNoteUseCases(
+        repository: NoteRepository
+    ): NoteUseCases {
+        return NoteUseCases(
+            getNotes = GetNotes(repository),
+            deleteNote = DeleteNote(repository),
+            addNote = AddNote(repository),
+            syncNotes = SyncNotes(repository),
+            getNote = GetNote(repository)
+        )
     }
 }

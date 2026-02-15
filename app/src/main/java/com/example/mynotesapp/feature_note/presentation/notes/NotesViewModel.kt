@@ -9,6 +9,7 @@ import com.example.mynotesapp.feature_note.domain.repository.NoteRepository
 import com.example.mynotesapp.feature_note.domain.use_case.NoteUseCases
 import com.example.mynotesapp.feature_note.domain.util.NoteOrder
 import com.example.mynotesapp.feature_note.domain.util.OrderType
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.Job
@@ -20,7 +21,6 @@ import javax.inject.Inject
 @HiltViewModel
 class NotesViewModel @Inject constructor(
     private val noteUseCases: NoteUseCases,
-    private val repository: NoteRepository
 ) : ViewModel() {
 
     private val _state = mutableStateOf(NotesState())
@@ -30,12 +30,17 @@ class NotesViewModel @Inject constructor(
 
     private var getNotesJob: Job? = null
 
-    init{
+    init {
         getNotes(NoteOrder.Date(OrderType.Descending))
+    }
+
+
+    fun syncNotesAfterLogin() {
         viewModelScope.launch {
             noteUseCases.syncNotes()
         }
     }
+
 
     fun onEvent(event: NotesEvent) {
         when (event) {
@@ -79,12 +84,6 @@ class NotesViewModel @Inject constructor(
                 )
             }
             .launchIn(viewModelScope)
-    }
-
-    suspend fun syncNotes() {
-        viewModelScope.launch {
-        repository.syncNotes()
-        }
     }
 
 }

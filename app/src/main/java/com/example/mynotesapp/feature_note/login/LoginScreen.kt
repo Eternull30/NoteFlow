@@ -66,7 +66,7 @@ fun LoginScreen(
                     auth.signInWithEmailAndPassword(email, password)
                         .addOnSuccessListener {
                             scope.launch {
-                                viewModel.syncNotes()
+                                viewModel.syncNotesAfterLogin()
                             }
                             Toast.makeText(context, "Login Successful", Toast.LENGTH_SHORT).show()
 
