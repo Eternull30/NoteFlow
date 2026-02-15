@@ -47,7 +47,6 @@ class NoteRepositoryImplementation(
 
     override suspend fun syncNotes() {
 
-        // 🔐 HARD GUARD — NO USER, NO SYNC
         val userId = firestoreDataSource.getCurrentUserId() ?: return
 
         val remoteNotes = firestoreDataSource.getAllNotes()

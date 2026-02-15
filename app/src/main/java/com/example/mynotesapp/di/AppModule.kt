@@ -20,7 +20,6 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object AppModule {
 
-    // 🔹 ROOM DATABASE
     @Provides
     @Singleton
     fun provideNoteDatabase(app: Application): NoteDataBase {
@@ -37,7 +36,6 @@ object AppModule {
         return db.noteDao
     }
 
-    // 🔹 FIREBASE
     @Provides
     @Singleton
     fun provideFirestore(): FirebaseFirestore =
@@ -57,7 +55,6 @@ object AppModule {
         return FirestoreDataSource(firestore, auth)
     }
 
-    // 🔹 REPOSITORY
     @Provides
     @Singleton
     fun provideNoteRepository(
@@ -67,7 +64,6 @@ object AppModule {
         return NoteRepositoryImplementation(dao, firestoreDataSource)
     }
 
-    // 🔹 USE CASES
     @Provides
     @Singleton
     fun provideNoteUseCases(
